@@ -7,12 +7,14 @@ public class Subset {
             Deque<String> dq = new Deque<String>();
             while (!StdIn.isEmpty()) {
                 //dq.enqueue(StdIn.readString());
-                dq.addFirst(StdIn.readString());
-            }
+                dq.addLast(StdIn.readString());
+                StdOut.println(dq.removeFirst());
+            }/*
             for (int i = 0; i < k; i++) {
                 //StdOut.println(dq.dequeue());
                 StdOut.println(dq.removeLast());
             }
+            */
         }
     }
 
