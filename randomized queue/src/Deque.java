@@ -3,9 +3,9 @@ import java.util.Iterator;
 public class Deque<Item> implements Iterable<Item> {
 
     private class Node {
-        Item item;
-        Node next;
-        Node prev;
+        private Item item;
+        private Node next;
+        private Node prev;
     }
 
     private class ListIterator implements Iterator<Item> {
@@ -105,10 +105,12 @@ public class Deque<Item> implements Iterable<Item> {
             first = last;
         }
     }
-/**
- * delete and return the item at the front.
- * @return Item removed.
- */
+
+    /**
+     * delete and return the item at the front.
+     * 
+     * @return Item removed.
+     */
     public final Item removeFirst() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
@@ -121,10 +123,12 @@ public class Deque<Item> implements Iterable<Item> {
         size--;
         return res;
     }
-/**
- * delete and return the item at the end.
- * @return Item removed
- */
+
+    /**
+     * delete and return the item at the end.
+     * 
+     * @return Item removed
+     */
     public final Item removeLast() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
@@ -144,6 +148,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     /**
      * return an iterator over items in order from front to end.
+     * 
      * @return instance of ListIteraor class
      */
     public final Iterator<Item> iterator() {

@@ -2,13 +2,13 @@ import java.util.Iterator;
 
 /**
  * @author Eugene Kotyashov
- *
+ * 
  * @param <Item>
  */
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private class Node {
-        Item item;
-        Node next;
+        private Item item;
+        private Node next;
     }
 
     private int size = 0;
