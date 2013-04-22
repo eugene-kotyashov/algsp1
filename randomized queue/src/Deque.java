@@ -51,7 +51,7 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @return true if no elements in the deque, false otherwise
      */
-    public final boolean isEmpty() {
+    public boolean isEmpty() {
         return (size == 0);
     }
 
@@ -60,7 +60,7 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @return number of items currently in the deque
      */
-    public final int size() {
+    public int size() {
         return size;
     }
 
@@ -70,7 +70,7 @@ public class Deque<Item> implements Iterable<Item> {
      * @param item
      *            Item to be added
      */
-    public final void addFirst(final Item item) {
+    public void addFirst(Item item) {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
@@ -87,7 +87,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    public final void addLast(final Item item) // insert the item at the end
+    public void addLast(Item item) // insert the item at the end
     {
         if (item == null) {
             throw new java.lang.NullPointerException();
@@ -111,7 +111,7 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @return Item removed.
      */
-    public final Item removeFirst() {
+    public Item removeFirst() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
@@ -129,7 +129,7 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @return Item removed
      */
-    public final Item removeLast() {
+    public Item removeLast() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
@@ -151,7 +151,7 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @return instance of ListIteraor class
      */
-    public final Iterator<Item> iterator() {
+    public Iterator<Item> iterator() {
         return new ListIterator();
     }
 

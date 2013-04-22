@@ -50,16 +50,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // is the queue empty?
-    public final boolean isEmpty() {
+    public boolean isEmpty() {
         return (first == null) || (size == 0);
     }
 
-    public final int size() // return the number of items on the queue
+    public int size() // return the number of items on the queue
     {
         return size;
     }
 
-    public final void enqueue(final Item item) // add the item
+    public void enqueue(Item item) // add the item
     {
         if (item == null) {
             throw new java.lang.NullPointerException();
@@ -72,7 +72,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // delete and return a random item
-    public final Item dequeue() {
+    public Item dequeue() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
@@ -93,7 +93,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // return (but do not delete) a random item
-    public final Item sample() {
+    public Item sample() {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
@@ -108,7 +108,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // return an independent iterator over items in random order
-    public final Iterator<Item> iterator() {
+    public Iterator<Item> iterator() {
         return new RandomizedListIterator();
     }
 }
