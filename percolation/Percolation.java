@@ -1,8 +1,15 @@
-/**
- * @author eugene.kotyashov@gmail.com Class for percolation simulation of a NxN
+/******************************************************************************
+ *  Name:    Eugene 
+ *  NetID:   euk
+ *  Precept: P01
+ * 
+ *  Description:  Class for percolation simulation of a NxN
  *         grid using WeightedQuickUnion implementation for sites
  *         interconnection last modified 28.12.2013
- */
+ * @author eugene.kotyashov@gmail.com
+******************************************************************************/
+
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
 

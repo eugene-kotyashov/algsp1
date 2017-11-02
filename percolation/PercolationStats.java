@@ -1,11 +1,13 @@
-/**
+/******************************************************************************
+ *  Name:    Eugene 
+ *  NetID:   euk
+ *  Precept: P01
  * 
- * @author eugene.kotyashov@gmail.com
- * Class for running the percolation problem
- * performing T simulations on NxN grid
- * last modified 28.12.2013
+ *  Description: Class for running the percolation problem
+ *    performing T simulations on NxN grid
  * Execution : java PercolationStats <grid size N> <number of runs T>
- */
+ * @author eugene.kotyashov@gmail.com
+ *****************************************************************************/
 public class PercolationStats {
 
     private double mean;
