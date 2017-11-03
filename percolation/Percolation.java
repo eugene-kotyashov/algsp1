@@ -17,6 +17,7 @@ private static final byte FILLED = 1;
 private static final byte OPENED = 0;
 
 private int sizeN;
+private int gridSize;
 private int openSiteCount;
 
 // simulation grid storage
@@ -25,11 +26,12 @@ private byte[] grid;
 
 private WeightedQuickUnionUF uf;
 
+    
 public Percolation(int N) // create N-by-N grid, with all sites blocked
 {
     sizeN = N;
     openSiteCount = 0;
-    int gridSize = sizeN * sizeN;
+    gridSize = sizeN * sizeN;
     grid = new byte[gridSize];
 // int uf instance with grid size plus 2 for virtual sites
     uf = new WeightedQuickUnionUF(gridSize + 2);
@@ -43,38 +45,46 @@ public Percolation(int N) // create N-by-N grid, with all sites blocked
     
 }
 
+private boolean indexValid(int i, int j)
+{
+    return (((i > 0) || (i < sizeN + 1)) || ((j > 0) || (j < sizeN + 1)));
+}
+
+private int gridToArray(int i, int j)
+{
+    return (sizeN * (i - 1) + j - 1);
+}
+
+private int gridToUFArray(int i, int j)
+{
+    return (sizeN * (i - 1) + j - 1 + 1);
+}
+
 public void open(int i, int j) // open site (row i, column j) if it is not
     // already
 {
-    if (((i < 1) || (i > sizeN)) || ((j < 1) || (j > sizeN))) {
-        throw new java.lang.IndexOutOfBoundsException();
+    if (!indexValid(i, j)) {
+        throw new java.lang.IllegalArgumentException();
     }
     if (!isOpen(i, j)) {
-        grid[(i - 1) * sizeN + (j - 1)] = OPENED;
+        grid[gridToArray(i, j)] = OPENED;
         openSiteCount++;
         // check if site is connected with its 4 neighbors
-        int ufCurId = sizeN * (i - 1) + j - 1 + 1; // corresponds to row i
-        // col j
-        int ufTestId = -1;
         //check connection with upper site
         if ((i < sizeN) && isOpen(i + 1, j)) {
-            ufTestId = sizeN * (i + 1 - 1) + j - 1 + 1;
-            uf.union(ufCurId, ufTestId);
+            uf.union(gridToUFArray(i, j), gridToUFArray(i + 1, j));
         }
         //check connection with lower cite
         if ((i > 1) && isOpen(i - 1, j)) {
-            ufTestId = sizeN * (i - 1 - 1) + j - 1 + 1;
-            uf.union(ufCurId, ufTestId);
+            uf.union(gridToUFArray(i, j), gridToUFArray(i - 1, j));
         }
         //check connection with left site
         if ((j > 1) && isOpen(i, j - 1)) {
-            ufTestId = sizeN * (i - 1) + j - 1 - 1 + 1;
-            uf.union(ufCurId, ufTestId);
+            uf.union(gridToUFArray(i, j), gridToUFArray(i, j - 1));
         }
         //check connection with right site
         if ((j < sizeN) && isOpen(i, j + 1)) {
-            ufTestId = sizeN * (i - 1) + j + 1 - 1 + 1;
-            uf.union(ufCurId, ufTestId);
+            uf.union(gridToUFArray(i, j), gridToUFArray(i, j + 1));
         }
     }
     
@@ -82,29 +92,29 @@ public void open(int i, int j) // open site (row i, column j) if it is not
 
 public boolean isOpen(int i, int j) // is site (row i, column j) open?
 {
-    if (((i < 1) || (i > sizeN)) || ((j < 1) || (j > sizeN))) {
-        throw new java.lang.IndexOutOfBoundsException();
+    if (!indexValid(i, j)) {
+        throw new java.lang.IllegalArgumentException();
     }
-    return (grid[(i - 1) * sizeN + (j - 1)] == OPENED);
+    return (grid[gridToArray(i, j)] == OPENED);
     
 }
 
 public boolean isFull(int i, int j) // is site (row i, column j) full?
 {    
     if (isOpen(i, j)) {
-        return uf.connected(0, (i - 1) * sizeN + (j - 1) + 1);
+        return uf.connected(0, gridToUFArray(i, j));
     } else {
         return false;
     }
 }
 
-public     int numberOfOpenSites()       // number of open sites
+public int numberOfOpenSites()       // number of open sites
 {
     return openSiteCount;
 }
 public boolean percolates() // does the system percolate?
 {
-    return uf.connected(0, sizeN * sizeN + 1);
+    return uf.connected(0, gridSize + 1);
 }
 
 }
