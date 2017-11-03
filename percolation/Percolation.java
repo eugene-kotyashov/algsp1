@@ -17,6 +17,7 @@ private static final byte FILLED = 1;
 private static final byte OPENED = 0;
 
 private int sizeN;
+private int openSiteCount;
 
 // simulation grid storage
 // value of 1 means site is full and 0 - open
@@ -27,6 +28,7 @@ private WeightedQuickUnionUF uf;
 public Percolation(int N) // create N-by-N grid, with all sites blocked
 {
     sizeN = N;
+    openSiteCount = 0;
     int gridSize = sizeN * sizeN;
     grid = new byte[gridSize];
 // int uf instance with grid size plus 2 for virtual sites
@@ -49,22 +51,27 @@ public void open(int i, int j) // open site (row i, column j) if it is not
     }
     if (!isOpen(i, j)) {
         grid[(i - 1) * sizeN + (j - 1)] = OPENED;
+        openSiteCount++;
         // check if site is connected with its 4 neighbors
         int ufCurId = sizeN * (i - 1) + j - 1 + 1; // corresponds to row i
         // col j
         int ufTestId = -1;
+        //check connection with upper site
         if ((i < sizeN) && isOpen(i + 1, j)) {
             ufTestId = sizeN * (i + 1 - 1) + j - 1 + 1;
             uf.union(ufCurId, ufTestId);
         }
+        //check connection with lower cite
         if ((i > 1) && isOpen(i - 1, j)) {
             ufTestId = sizeN * (i - 1 - 1) + j - 1 + 1;
             uf.union(ufCurId, ufTestId);
         }
+        //check connection with left site
         if ((j > 1) && isOpen(i, j - 1)) {
             ufTestId = sizeN * (i - 1) + j - 1 - 1 + 1;
             uf.union(ufCurId, ufTestId);
         }
+        //check connection with right site
         if ((j < sizeN) && isOpen(i, j + 1)) {
             ufTestId = sizeN * (i - 1) + j + 1 - 1 + 1;
             uf.union(ufCurId, ufTestId);
@@ -91,6 +98,10 @@ public boolean isFull(int i, int j) // is site (row i, column j) full?
     }
 }
 
+public     int numberOfOpenSites()       // number of open sites
+{
+    return openSiteCount;
+}
 public boolean percolates() // does the system percolate?
 {
     return uf.connected(0, sizeN * sizeN + 1);

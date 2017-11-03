@@ -73,8 +73,8 @@ public class PercolationStats {
             try {
                 PercolationStats ps = 
                     new PercolationStats(
-                                         new Integer(args[0]),
-                                         new Integer(args[1]));
+                                         Integer.parseInt(args[0], 10),
+                                         Integer.parseInt(args[1], 10));
                 StdOut.println("mean =" + ps.mean());
                 StdOut.println("stddev =" + ps.stddev());
                 StdOut.println("95% confidence interval = " + ps.confidenceLo()
