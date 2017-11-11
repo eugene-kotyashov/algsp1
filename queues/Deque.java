@@ -1,32 +1,38 @@
+/******************************************************************************
+ *  Name:    Eugene Kotyashov
+ *  NetID:   eugene
+ *  Precept: P01
+ *
+ *  Partner Name:    N/A
+ *  Partner NetID:   N/A
+ *  Partner Precept: N/A
+ * 
+ *  Description:  Model a Deque   data structure.
+ ******************************************************************************/
+
 import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
-    
-    
-    private class Node
-    {
-        Item item;
-        Node next;     
+
+    private class Node {
+        private Item item;
+        private Node next;
+        private Node prev;
     }
-    
-    private class ListIterator implements Iterator<Item>
-    {
+
+    private class ListIterator implements Iterator<Item> {
         private Node current = first;
-        
-        public boolean hasNext()
-        {
+
+        public boolean hasNext() {
             return current != null;
         }
-        
-        public void remove()
-        {
+
+        public void remove() {
             throw new UnsupportedOperationException();
         }
-        
-        public Item next()
-        {
-            if (current == null)
-            {
+
+        public Item next() {
+            if (current == null) {
                 throw new java.util.NoSuchElementException();
             }
             Item res = current.item;
@@ -34,72 +40,131 @@ public class Deque<Item> implements Iterable<Item> {
             return res;
         }
     }
-    
+
+    /**
+     * pointer to the first node.
+     */
     private Node first = null;
+    /**
+     * pointer to the last node.
+     */
     private Node last = null;
+    /**
+     * number of nodes in the deque.
+     */
     private int size = 0;
-    
-    public Deque()                     // construct an empty deque
-    {       
+
+    // construct an empty deque
+    public Deque() {
     }
-    public boolean isEmpty()           // is the deque empty?
-    {
-        return first == null;
+
+    /**
+     * check if the deque empty?
+     * 
+     * @return true if no elements in the deque, false otherwise
+     */
+    public boolean isEmpty() {
+        return (size == 0);
     }
-    public int size()                  // return the number of items on the deque
-    {
+
+    /**
+     * return the number of items on the deque.
+     * 
+     * @return number of items currently in the deque
+     */
+    public int size() {
         return size;
     }
-    public void addFirst(Item item)    // insert the item at the front
-    {
-        if (item == null)
-        {
+
+    /**
+     * insert the item at the front.
+     * 
+     * @param item
+     *            Item to be added
+     */
+    public void addFirst(Item item) {
+        if (item == null) {
             throw new java.lang.NullPointerException();
         }
         Node oldfirst = first;
         first = new Node();
         first.item = item;
         first.next = oldfirst;
+        if (oldfirst != null) {
+            oldfirst.prev = first;
+        }
         size++;
+        if (size == 1) {
+            last = first;
+        }
     }
-    public void addLast(Item item)     // insert the item at the end
+
+    public void addLast(Item item) // insert the item at the end
     {
-        if (item == null)
-        {
+        if (item == null) {
             throw new java.lang.NullPointerException();
         }
         Node oldLast = last;
         last = new Node();
         last.item = item;
         last.next = null;
-        oldLast.next = last;
+        if (oldLast != null) {
+            oldLast.next = last;
+        }
+        last.prev = oldLast;
+        size++;
+        if (size == 1) {
+            first = last;
+        }
     }
-    public Item removeFirst()          // delete and return the item at the front
-    {
-        if (isEmpty())
-        {
+
+    /**
+     * delete and return the item at the front.
+     * 
+     * @return Item removed.
+     */
+    public Item removeFirst() {
+        if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
         Item res = first.item;
         first = first.next;
+        if (first != null) {
+            first.prev = null;
+        }
         size--;
         return res;
     }
-    public Item removeLast()           // delete and return the item at the end
-    {
-        if (isEmpty())
-        {
+
+    /**
+     * delete and return the item at the end.
+     * 
+     * @return Item removed
+     */
+    public Item removeLast() {
+        if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
         Item res = last.item;
-        last = null;
+        last = last.prev;
+        if (last != null) {
+            last.next = null;
+        }
+        size--;
+        if (size == 1) {
+            first = last;
+        }
         return res;
-        
+
     }
-    
-    public Iterator<Item> iterator()   // return an iterator over items in order from front to end
-    {
+
+    /**
+     * return an iterator over items in order from front to end.
+     * 
+     * @return instance of ListIteraor class
+     */
+    public Iterator<Item> iterator() {
         return new ListIterator();
     }
-   
+
 }
