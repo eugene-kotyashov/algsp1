@@ -18,15 +18,32 @@ import java.util.Arrays;
 
 
 public class FastCollinearPoints {
-    private ArrayList <LineSegment> segs = null;
+    private ArrayList<LineSegment> segs = null;
     // finds all line segments containing 4 or more points
-    public FastCollinearPoints(Point[] points){
+    public FastCollinearPoints(Point[] points) {
         segs = new ArrayList<LineSegment>();
         Arrays.sort(points);
-        
+        for (int i = 0; i < points.length; i++) {
+           Point[] tmp = Arrays.copyOfRange(points, i+1, points.length);
+           Arrays.sort(tmp, points[i].slopeOrder());
+           int j = 0;
+           while (j < tmp.length-1) {
+               int k = 1; 
+               while ((j+k < tmp.length) &&
+               (points[i].slopeOrder().compare(tmp[j], tmp[j+k]) == 0)) {
+                //points[i].slopeTo(tmp[j]) == points[i].slopeTo(tmp[j+k]))) {
+                   k++;
+               }
+               if (k >= 3) {
+                   segs.add(new LineSegment(points[i], tmp[j+k-1]));
+               }
+               j = j + k;
+           }
+        }        
     }
+    
    // the number of line segments
-    public           int numberOfSegments() {
+    public int numberOfSegments() {
         return segs.size();
     }
     
@@ -58,7 +75,7 @@ public class FastCollinearPoints {
        
        // print and draw the line segments
        FastCollinearPoints collinear = new FastCollinearPoints(points);
-       //StdOut.println(collinear.numberOfSegments());
+       StdOut.println(collinear.numberOfSegments());
        for (LineSegment segment : collinear.segments()) {
            StdOut.println(segment);
            segment.draw();

@@ -1,21 +1,38 @@
 /******************************************************************************
- *  Compilation:  javac Point.java
- *  Execution:    java Point
- *  Dependencies: none
- *  
- *  An immutable data type for points in the plane.
+ *  Name:    Eugene Kotyashov
+ *  NetID:   euk
+ *  Precept: P01
+ *
+ *  Partner Name:    N/A
+ *  Partner NetID:   N/A
+ *  Partner Precept: N/A
+ * 
+ *  Description: An immutable data type for points in the plane.
  *  For use on Coursera, Algorithms Part I programming assignment.
  *
- ******************************************************************************/
+******************************************************************************/
 
 import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
 
-public class Point implements Comparable<Point> {
+public class Point implements Comparable<Point> {    
+    
 
     private final int x;     // x-coordinate of this point
     private final int y;     // y-coordinate of this point
+    
 
+    class SlopeComparator implements Comparator<Point> {
+        
+        public int compare(Point p1, Point p2) {
+            if (Point.this.slopeTo(p1) < Point.this.slopeTo(p2)) 
+                return -1;
+            if (Point.this.slopeTo(p1) > Point.this.slopeTo(p2)) 
+                return 1;
+            return 0;
+        }        
+            
+    }
     /**
      * Initializes a new point.
      *
@@ -69,6 +86,12 @@ public class Point implements Comparable<Point> {
             }
             
         }
+        else if ( that.y == this.y ) {
+            return +0.0;
+        }
+        
+        return (double)(that.y - this.y) / (double)(that.x - this.x);
+            
     }
 
     /**
@@ -85,6 +108,12 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         /* YOUR CODE HERE */
+        if (this.y < that.y) return -1;
+        if ((this.y == that.y) && (this.x < that.x)) return -1;
+        if (this.y > that.y) return +1;
+        if ((this.y == that.y) && (this.x > that.x)) return +1;
+        return 0;
+        
     }
 
     /**
@@ -95,6 +124,7 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
+        return new SlopeComparator();
     }
 
 
