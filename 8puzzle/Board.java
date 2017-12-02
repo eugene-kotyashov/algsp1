@@ -1,37 +1,58 @@
-
-import java.util.Arrays;
+/******************************************************************************
+ *  Name:    Eugene Kotyashov
+ *  NetID:   euk
+ *  Precept: P01
+ *
+ *  Partner Name:    N/A
+ *  Partner NetID:   N/A
+ *  Partner Precept: N/A
+ * 
+ *  Description: n-puzzle board game class
+ *
+******************************************************************************/
 import java.util.ArrayList;
 
 public class Board {
     private int [][] data;
-    private ArrayList neighborsData;
+    private ArrayList<Board> neighborsData;
     private int dim;
     private int manhattanDist;
     private int hammingDist;
+    private int zeroRow = -1;
+    private int zeroCol = -1;
     
         
-        
-    public Board(int[][] blocks)           // construct a board from an n-by-n array of blocks
-                                           // (where blocks[i][j] = block in row i, column j)
+    // construct a board from an n-by-n array of blocks
+    // (where blocks[i][j] = block in row i, column j)
+    public Board(int[][] blocks)         
     {
         int goalRow, goalCol;
         int curVal;
         manhattanDist = 0;
         hammingDist = 0;
+        neighborsData = null;
         dim = blocks.length;
         data = new int[dim][dim];
-        for(int row=0; row < dim; row++) {
-            for(int col=0; col < dim-1; col++) {
+        for (int row = 0; row < dim; row++) {
+            for (int col = 0; col < dim; col++) {
                 data[row][col] = blocks[row][col];
                 curVal = data[row][col];
-                goalRow = curVal / dim;
-                goalCol = curVal % dim + 1;
-                manhattanDist += Math.abs(goalRow - row) + Math.abs(goalCol-col); 
-                if (data[row][col] != row*dim + col + 1){
+                if (curVal == 0) {
+                    zeroCol = col;
+                    zeroRow = row;
+                    continue;
+                }
+                goalRow = (curVal-1) / dim;
+                goalCol = (curVal-1) % dim;
+                manhattanDist += 
+                    Math.abs(row - goalRow) + Math.abs(col - goalCol); 
+                if (data[row][col] != row*dim + col + 1) {
                     hammingDist++;
                 }
             }
-        }            
+        }
+        //init neighbours
+        
     }
     
     public int dimension()                 // board dimension n
@@ -44,35 +65,30 @@ public class Board {
         return hammingDist;
         
     }
-    
-    public int manhattan()                 // sum of Manhattan distances between blocks and goal
+    // sum of Manhattan distances between blocks and goal
+    public int manhattan()                 
     {
         return manhattanDist;
     }
-    
-    public boolean isGoal()                // is this board the goal board?
+    // is this board the goal board?
+    public boolean isGoal()
     {
         return hammingDist == 0;
                 
     }
-    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
+    // a board that is obtained by exchanging any pair of blocks
+    public Board twin()
     {
         int [][] tmp = new int [dim][dim];
-        int zeroRow = -1;
-        int zeroCol = -1;
-        for(int row=0; row < dim; row++) {
-            for(int col=0; col < dim; col++) {
+        for (int row = 0; row < dim; row++) {
+            for (int col = 0; col < dim; col++) {
                 tmp[row][col] = data[row][col];
-                if (tmp[row][col] == 0) {
-                    zeroRow = row;
-                    zeroCol = col;
-                }
             }
         }
         
-        for(int row=0; row < dim; row++) {
-            for(int col=0; col < dim; col++) {
-                if ((col != zeroCol) && (col+1 != zeroCol) && (col < dim-2)) {
+        for (int row = 0; row < dim; row++) {
+            for (int col = 0; col < dim; col++) {
+                if ((row != zeroRow) && (col < dim-1)) {
                     tmp[row][col] = data[row][col+1];
                     tmp[row][col+1] = data[row][col];
                     return new Board(tmp);
@@ -87,21 +103,48 @@ public class Board {
         if (y == this) return true;
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
-        int[][] tmp = (int[][])y;
-        if (tmp.length != data.length) return false;
-        if (tmp.length > 0) {
-            if (tmp[0].length != data[0].length)
-                return false;
-        }
-        return Arrays.equals(data, tmp);
+        Board tmp = (Board) y;
+        return this.toString().equals(tmp.toString());
     }
     
     public Iterable<Board> neighbors()     // all neighboring boards
     {
+        if (neighborsData == null) {
+            neighborsData = new ArrayList<Board>();
+            if (zeroCol > 0) {
+                data[zeroRow][zeroCol] = data[zeroRow][zeroCol-1];
+                data[zeroRow][zeroCol-1] = 0;
+                neighborsData.add(new Board(data));
+                data[zeroRow][zeroCol-1] = data[zeroRow][zeroCol];
+                data[zeroRow][zeroCol] = 0;
+            }
+            if (zeroCol < dim-1) {
+                data[zeroRow][zeroCol] = data[zeroRow][zeroCol+1];
+                data[zeroRow][zeroCol+1] = 0;
+                neighborsData.add(new Board(data));
+                data[zeroRow][zeroCol+1] = data[zeroRow][zeroCol];
+                data[zeroRow][zeroCol] = 0;
+            }
+            if (zeroRow > 0) {
+                data[zeroRow][zeroCol] = data[zeroRow-1][zeroCol];
+                data[zeroRow-1][zeroCol] = 0;
+                neighborsData.add(new Board(data));
+                data[zeroRow-1][zeroCol] = data[zeroRow][zeroCol];
+                data[zeroRow][zeroCol] = 0;
+            }
+            if (zeroRow < dim-1) {
+                data[zeroRow][zeroCol] = data[zeroRow+1][zeroCol];
+                data[zeroRow+1][zeroCol] = 0;
+                neighborsData.add(new Board(data));
+                data[zeroRow+1][zeroCol] = data[zeroRow][zeroCol];
+                data[zeroRow][zeroCol] = 0;
+            }            
+        }
         return neighborsData;
     }
     
-    public String toString()               // string representation of this board (in the output format specified below)
+// string representation of this board (in the output format specified below)
+    public String toString()             
     {
         StringBuilder s = new StringBuilder();
         s.append(dim + "\n");
@@ -117,5 +160,6 @@ public class Board {
 
     public static void main(String[] args) // unit tests (not graded)
     {
+        
     }
 }
