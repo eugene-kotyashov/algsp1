@@ -79,10 +79,10 @@ public class Solver {
                 neighborNode.priority = 
                     neighborNode.bd.manhattan() + neighborNode.moves;
                 boolean isAlreadyProcessed = false;
-                //check if a node is already processed 
-                for (Board brd : processedNodes) {
-                    isAlreadyProcessed = brd.equals(neighborNode.bd);
-                    if (isAlreadyProcessed) break;
+                //check if a node is already processed
+                SearchNode tmp_node = curNode.parent;
+                if (tmp_node != null) {
+                    isAlreadyProcessed = neighborNode.bd.equals(tmp_node.bd);
                 }
                 //StdOut.println("alreadyProcessed " + isAlreadyProcessed);
                 if (!isAlreadyProcessed) 

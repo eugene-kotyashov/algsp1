@@ -128,6 +128,7 @@ public class Board {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         Board tmp = (Board) y;
+        if (this.dim != tmp.dim) return false;
         boolean res = true;
         for (int row = 0; row < dim; row++) {
             for (int col = 0; col < dim; col++) {
